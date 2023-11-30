@@ -17,4 +17,6 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poe.tasks]
-cuda11 = "pip install torch>1.10.0+cu115 torchvision>0.11.1+cu115 torchaudio>0.10.0+cu115 -f https://download.pytorch.org/whl/cu115/torch_stable.html"
+cuda11 = "pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118"
+
+###pip install torch>1.10.0+cu115 torchvision>0.11.1+cu115 torchaudio>0.10.0+cu115 -f https://download.pytorch.org/whl/cu115/torch_stable.html
