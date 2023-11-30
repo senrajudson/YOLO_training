@@ -12,6 +12,24 @@ class YOLOTrainer:
         self._predict_YOLO = None
         self._yolo_Classes = None
         self._yolo_Notes = None
+        self._object_to_predict = None
+        self._predict_confidence = None
+
+    @property
+    def object_to_predict(self):
+        return self._object_to_predict
+    
+    @object_to_predict.setter
+    def object_to_predict(self, predict_object):
+        self._object_to_predict = predict_object
+
+    @property
+    def predict_confidence(self):
+        return self._predict_confidence
+    
+    @predict_confidence.setter
+    def predict_confidence(self, confidence):
+        self._predict_confidence = confidence
 
     @property
     def yolo_Classes(self):
@@ -70,7 +88,7 @@ class YOLOTrainer:
     def slicing_dataset_for_traning(self):
 
         list_archives = [self.image_folder, self.annotations_folder]
-        yolo_dataset_dir = "dataset_YOLO"
+        yolo_dataset_dir = "datasets/dataset_YOLO"
         os.makedirs(yolo_dataset_dir, exist_ok=True)
 
         # Padrão para encontrar a última pasta no caminho
@@ -95,25 +113,37 @@ class YOLOTrainer:
 
                     
                     if os.path.isfile(path_file):
-                        os.makedirs(f"dataset_YOLO/train/{name_folder}", exist_ok=True)
-                        os.makedirs(f"dataset_YOLO/val/{name_folder}", exist_ok=True)
+                        os.makedirs(f"datasets/dataset_YOLO/{name_folder}/train", exist_ok=True)
+                        os.makedirs(f"datasets/dataset_YOLO/{name_folder}/val", exist_ok=True)
 
                         if counter >= (len(os.listdir(path_folder))*(100-int(self.test_percentual_divisor))/100):
-                            destination = f"dataset_YOLO/val/{name_folder}"
+                            destination = f"datasets/dataset_YOLO/{name_folder}/val"
                         else:
-                            destination = f"dataset_YOLO/train/{name_folder}"
+                            destination = f"datasets/dataset_YOLO/{name_folder}/train"
                             counter += 1
                         
                         path_destination = os.path.join(destination, file)
                         shutil.copy(path_file, path_destination)
 
+        with open("datasets/dataset_YOLO/dataset.yaml", "w") as file:
+            file.write(
+"""
+path: dataset_YOLO
+train: images/train
+val: images/val
+names:
+    0 : "Emiss\u00e3o Fugitiva"
+"""
+            )
+
     def training_YOLO_model(self):
-        conteudo = os.listdir("dataset_YOLO")
-        for item in conteudo:
-            print(item)
         model = YOLO("yolov8n.pt")
-        results = model.train(data = "dataset_YOLO", epochs=10, imgsz=640)
+        results = model.train(data = "datasets/dataset_YOLO/dataset.yaml", epochs=10, imgsz=640, device="cuda")
 
         return results
+    
+    def predict_YOLO_model(self):
+        model = (YOLO("runs/detect/train/weights/best.pt"))
+        model.predict(self.object_to_predict, save=True, imgz=640, conf=self.predict_confidence)
 
 
