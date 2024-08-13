@@ -1,0 +1,10 @@
+*YOLO
+*YOLO_images
+datasets
+dataset
+*runs
+yolo*
+*dataset_for_training\dataset_for_training\__pycache__
+*vid*
+lixo*
+pelotas*
