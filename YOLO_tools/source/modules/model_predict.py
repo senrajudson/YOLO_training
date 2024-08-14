@@ -1,11 +1,15 @@
 from ultralytics import YOLO
 
-def predict_YOLO_model(self, train="train"):
+"""
+usar predição do modelo de deteção
+"""
+
+def predict_YOLO_model(train, objectToPredict):
     model = YOLO(f"runs/detect/{train}/weights/best.pt")
     # model.predict(self.object_to_predict, save=True, conf=self.predict_confidence, device="cuda", save_txt=False, save_conf=True, save_crop=False)
 
     # Run batched inference on a list of images
-    results = model(self.object_to_predict)  # return a generator of Results objects
+    results = model(objectToPredict)  # return a generator of Results objects
     # Process results generator
     for result in results:
         device = result.cuda()
@@ -18,5 +22,5 @@ def predict_YOLO_model(self, train="train"):
         probs = result.probs  # Probs object for classification outputs
         obb = result.obb  # Oriented boxes object for OBB outputs
         # result.show()  # display to screen
-        result.save(filename=f"{self.object_to_predict}")  # save to disk
-        print(self.object_to_predict)
+        result.save(filename=f"{objectToPredict}")  # save to disk
+        print(objectToPredict)
