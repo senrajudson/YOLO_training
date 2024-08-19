@@ -8,11 +8,10 @@ class YOLOTrainer:
         self.image_folder = None
         self.annotations_folder = None
         self.test_percentual_divisor = None
-        self._predict_YOLO = None
+        self.predict_YOLO = None
         self.yolo_Classes = None
-        self._yolo_Notes = None
         self.object_to_predict = None
-        self._predict_confidence = None
+        self.predict_confidence = None
         self.train_model = None
 
     def slicing(self):
@@ -22,7 +21,7 @@ class YOLOTrainer:
         training_YOLO_model()
 
     def predict(self):
-        predict_YOLO_model(self.train_model, self.object_to_predict)
+        predict_YOLO_model(self.train_model, self.object_to_predict, self.predict_confidence)
 
     @property
     def object_to_predict(self):
@@ -34,7 +33,7 @@ class YOLOTrainer:
 
     @property
     def train_model(self):
-        return self.train_model
+        return self._train_model
     
     @train_model.setter
     def train_model(self, model):
@@ -53,18 +52,9 @@ class YOLOTrainer:
         return self._yolo_Classes
     
     @yolo_Classes.setter
-    def yolo_Classes(self, path):
-        self._yolo_Classes = path
+    def yolo_Classes(self, cls):
+        self._yolo_Classes = cls
 
-    @property
-    def yolo_Notes(self):
-        return self._yolo_Notes
-    
-    @yolo_Notes.setter
-    def yolo_Notes(self, path):
-        self._yolo_Notes = path
-
-    
     @property
     def predict_YOLO(self):
         return self._predict_YOLO
@@ -97,11 +87,4 @@ class YOLOTrainer:
     def test_percentual_divisor(self, value):
         self._test_percentual_divisor = value
 
-    # @property
-    # def predict_YOLO(self):
-    #     return self._predict_YOLO
-    
-    # @predict_YOLO.setter
-    # def predict_YOLO(self, value):
-    #     self._predict_YOLO = value
             

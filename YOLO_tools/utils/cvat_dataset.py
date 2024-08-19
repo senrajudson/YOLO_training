@@ -7,9 +7,9 @@ Uma função para separar os arquivos de um dataset importado pelo CVAT
 """
 
 def cvat_dataset(path_folder, output_folder_name):
-    path_folder = "pelotas_12-08/obj_Train_data"
-    os.makedirs("pelotas_12-08/images", exist_ok=True)
-    os.makedirs("pelotas_12-08/labels", exist_ok=True)
+    path_folder = f"{path_folder}/obj_Train_data"
+    os.makedirs(f"{output_folder_name}/images", exist_ok=True)
+    os.makedirs(f"{output_folder_name}/labels", exist_ok=True)
 
     image_path  = f"{output_folder_name}/images"
     text_path = f"{output_folder_name}/labels"
