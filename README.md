@@ -40,7 +40,7 @@ yolo_trainer.training()
 **Descrição**: Função para treinar o modelo Yolo, requer declar os parâmetros:
 
 - `img_sz`
-- `training_epochs` for the number of ephocs número de épocas
+- `training_epochs` número de épocas
 - `task` escolha a tarefa a qual você deseja treinar o seu modelo
 
 ### `predict()`
