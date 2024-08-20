@@ -80,7 +80,7 @@ from utils.torch_is_available import torch_is_available
 torch_is_available()
 ```
 
-**Descrição**: Um script para rodar todas as funções relevanstes para conferir o seu cuda toolkit:
+**Descrição**: Um script para rodar todas as funções relevantes para conferir o seu cuda toolkit:
 
 - `nvcc --version` e `which cuda` no prompt além dos comandos
 - `toch.cuda.is_available()`
