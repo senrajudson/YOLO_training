@@ -31,10 +31,17 @@ yolo_trainer.slicing()
 ### `training()`
 
 ```python
+yolo_trainer.img_sz = 960
+yolo_trainer.training_epochs = 20
+yolo_trainer.task = "detect"
 yolo_trainer.training()
 ```
 
-**Descrição**: Função para treinar o modelo Yolo, se você executou o slicing no seu dataset, nada será necessário com o requisito para treiná-lo.
+**Descrição**: Função para treinar o modelo Yolo, requer declar os parâmetros:
+
+- `img_sz`
+- `training_epochs` for the number of ephocs
+- `task` choose the task you want to train your model
 
 ### `predict()`
 

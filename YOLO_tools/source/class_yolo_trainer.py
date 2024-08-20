@@ -13,15 +13,42 @@ class YOLOTrainer:
         self.object_to_predict = None
         self.predict_confidence = None
         self.train_model = None
+        self.img_sz = None
+        self.training_epochs = None
+        self.task = None
 
     def slicing(self):
         slicing_dataset_for_traning(self.image_folder, self.annotations_folder, self.yolo_Classes, self.test_percentual_divisor)
 
     def training(self):
-        training_YOLO_model()
+        training_YOLO_model(self.img_sz, self.training_epochs, self.task)
 
     def predict(self):
         predict_YOLO_model(self.train_model, self.object_to_predict, self.predict_confidence)
+
+    @property
+    def task(self):
+        return self._task
+    
+    @task.setter
+    def task(self, option):
+        self._task = option
+
+    @property
+    def img_sz(self):
+        return self._img_sz
+    
+    @img_sz.setter
+    def img_sz(self, img):
+        self._img_sz = img
+
+    @property
+    def training_epochs(self):
+        return self._training_epochs
+    
+    @training_epochs.setter
+    def training_epochs(self, epochs):
+        self._training_epochs = epochs
 
     @property
     def object_to_predict(self):
@@ -86,5 +113,3 @@ class YOLOTrainer:
     @test_percentual_divisor.setter
     def test_percentual_divisor(self, value):
         self._test_percentual_divisor = value
-
-            

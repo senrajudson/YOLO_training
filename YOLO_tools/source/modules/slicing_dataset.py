@@ -19,7 +19,6 @@ def slicing_dataset_for_traning(imageFolder, annotationsFolder, yoloClasses, Tes
             for file in os.listdir(path_folder):
                 path_file = os.path.join(path_folder, file)
 
-                
                 if os.path.isfile(path_file):
                     os.makedirs(f"dataset/dataset_YOLO/{name_folder}/train", exist_ok=True)
                     os.makedirs(f"dataset/dataset_YOLO/{name_folder}/val", exist_ok=True)
