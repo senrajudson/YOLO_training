@@ -54,7 +54,7 @@ yolo_trainer.predict()
 
 **Descrição**: Função para realizar predições utilizando o modelo treinado. É necessário declarar:
 
-- `train_model` o nome da pasta que você quer usar, por exemplo "train16"
+- `train_model` o nome da pasta local em 'runs' com o modelo que você deseja usar, por exemplo "train16", será selecionada a versão 'best.pt' do modelo
 - `object_to_predict`
 - `predict_confidence`
 
