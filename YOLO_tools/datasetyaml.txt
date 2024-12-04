@@ -1,0 +1,20 @@
+path: dataset_YOLO
+train: images/train
+val: images/val
+names: ["Hardhat", "Person"]
+
+# Exemplo de Dataset YAML para YOLO
+
+# Número de classes (substitua pelo número correto de classes do seu modelo)
+nc: 2  # Número de classes
+
+names:
+  0: 'Hardhat'
+  1: 'Person'
+
+train: 'dataset_YOLO/images/train'  # Caminho para as imagens de treino
+val: 'dataset_YOLO/images/val'      # Caminho para as imagens de validação
+
+train_annot: 'dataset_YOLO/labels/train'
+val_annot: 'dataset_YOLO/labels/train'
+

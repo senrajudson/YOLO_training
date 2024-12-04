@@ -7,7 +7,8 @@ treinar o modelo
 def training_YOLO_model(img, epochs, task):
 
     if task == "detect":
-        model = YOLO("yolov8n.pt")
+        # model = YOLO("yolov8n.pt")
+        model = YOLO("ppe.pt")
 
     if task == "classify":
         model = YOLO("yolov8n-cls.pt")
