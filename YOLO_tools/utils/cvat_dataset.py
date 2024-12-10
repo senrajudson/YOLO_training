@@ -1,12 +1,12 @@
-import os
-import re
-import shutil
-
-"""
-Uma função para separar os arquivos de um dataset importado pelo CVAT
-"""
-
 def cvat_dataset(path_folder, output_folder_name):
+    import shutil
+    import os
+    import re
+
+    """
+    Uma função para separar os arquivos de um dataset importado pelo CVAT
+    """
+
     path_folder = f"{path_folder}/obj_Train_data"
     os.makedirs(f"{output_folder_name}/images", exist_ok=True)
     os.makedirs(f"{output_folder_name}/labels", exist_ok=True)

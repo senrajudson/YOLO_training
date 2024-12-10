@@ -1,0 +1,6 @@
+IF aug == True and list_aug != []:
+  'check IF valid params in list'
+    ELSE 'error and valid list of params'
+  'result'
+ELSE:
+  'error missing list'

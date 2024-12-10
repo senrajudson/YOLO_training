@@ -1,10 +1,10 @@
-import os
-
-"""
-Uma função para checar se algum arquivo existe
-"""
-
 def check_file(file_path):
+  import os
+
+  """
+  Uma função para checar se algum arquivo existe
+  """
+
   file_name = file_path
 
   # Check if the file exists

@@ -1,0 +1,10 @@
+### pixelLevel
+gassianblur, motionblur
+autocontrast, RandomBrightnessContrast
+ISONoise, SaltAndPepper
+RandomFog, RandomSnow, RandomRain, RandomSunFlare
+
+### spatialLevel
+centerCrop, Resize, SmallestMaxSize, Transpose, VerticalFlip, SafeRotate,
+GridDropoutm
+HorizontalFlip

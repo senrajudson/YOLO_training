@@ -1,11 +1,11 @@
-import torch
-import subprocess
-
-"""
-Uma função para testar se o torch está funcionando
-"""
-
 def torch_is_available():
+  import torch
+  import subprocess
+
+  """
+  Uma função para testar se o torch está funcionando
+  """
+
   list_commands = ['nvcc --version',"which cuda"]
 
   for command in list_commands: 
