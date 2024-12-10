@@ -83,7 +83,6 @@ def model_detect(dataset_path):
                     # Transformações no nível espacial
                     A.BBoxSafeRandomCrop(erosion_rate=0.15, p=0.2),
                     A.SmallestMaxSize(max_size=img_width*0.75, p=0.2),
-                    A.Transpose(p=0.2),
                     A.VerticalFlip(p=0.2),
                     A.SafeRotate(limit=10, border_mode=0, p=0.2),
                     A.GridDropout(ratio=0.3, unit_size_min=15, unit_size_max=40, holes_number_x=2, holes_number_y=2, p=0.2),
@@ -152,10 +151,8 @@ def model_classify(dataset_path):
                                 A.RandomSunFlare(flare_roi=(0.5, 0.5, 1, 1), angle_lower=0.0, src_radius=100, p=0.2),
                                 
                                 # Transformações no nível espacial
-                                A.RandomGridShuffle(grid=(3, 3), p=0.2),
-                                A.RandomCrop(height=100, width=100, p=0.2),
+                                A.RandomGridShuffle(grid=(2, 2), p=0.2),
                                 A.SmallestMaxSize(max_size=img_width*0.75, p=0.2),
-                                A.Transpose(p=0.2),
                                 A.VerticalFlip(p=0.2),
                                 A.SafeRotate(limit=10, border_mode=0, p=0.2),
                                 A.GridDropout(ratio=0.3, unit_size_min=15, unit_size_max=40, holes_number_x=2, holes_number_y=2, p=0.2),
