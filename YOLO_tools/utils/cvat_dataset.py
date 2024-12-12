@@ -7,6 +7,10 @@ def cvat_dataset(path_folder, output_folder_name):
     Uma função para separar os arquivos de um dataset importado pelo CVAT
     """
 
+    if not os.path.exists(path_folder):
+        print(f"Erro: O diretório '{path_folder}' não existe.")
+        return
+    
     path_folder = f"{path_folder}/obj_Train_data"
     os.makedirs(f"{output_folder_name}/images", exist_ok=True)
     os.makedirs(f"{output_folder_name}/labels", exist_ok=True)

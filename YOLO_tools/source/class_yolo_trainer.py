@@ -12,9 +12,11 @@ class YOLOTrainer:
         self.dataset_path = None
         self.task = None
         self.aug = False
+        self.n_aug = 2
+        self.odd = 0.5
 
     def slicing(self):
-        slicing_dataset_for_traning(self.task, self.image_folder, self.annotations_folder, self.yolo_Classes, self.test_percentual_divisor, self.dataset_path, self.aug)
+        slicing_dataset_for_traning(self.task, self.image_folder, self.annotations_folder, self.yolo_Classes, self.test_percentual_divisor, self.dataset_path, self.aug, self.n_aug, self.odd)
 
     @property
     def image_folder(self):
@@ -71,6 +73,14 @@ class YOLOTrainer:
     @aug.setter
     def aug(self, value):
         self._aug = value
+
+    @property
+    def n_aug(self):
+        return self._n_aug
+    
+    @n_aug.setter
+    def n_aug(self, value):
+        self._n_aug = value
 
     # def training(self):
     #     training_YOLO_model(self.training_model, self.img_sz, self.training_epochs)

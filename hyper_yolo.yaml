@@ -1,25 +1,26 @@
 # Training configuration
 train:
-  imgsz: [640, 480] # ou imgsz: 640 para imagens quadradas
+  # imgsz: [480, 240] # ou imgsz: 640 para imagens quadradas
+  imgsz: 640
   batch: 64 # (1-32) pequeno || (64-128) médio || (256-512 ou mais) grande || batches maiores permitem maiores lr's
-  weight_decay: 0.001 # penalizar pesos, quanto maior, melhor generalização para coisas que o modelo n viu, mas menor o apredizado por época || 0.1 é alto, 0.0005 é baixo
 
 # Exemplo de proporção prática: Se warmup lr = 0.001, um bom ponto de partida para warmup bias lr pode ser entre 10% a 20% desse valor, ou seja, warmup bias lr = 0.0001 a 0.0002.
 
-  warmup_lr: 0.005
-  warmup_epochs: 10  # Número de epochs de warmup
+  warmup_epochs: 15  # Número de epochs de warmup
   warmup_momentum: 0.5  # Momentum durante o warmup
-  warmup_bias_lr: 0.0002  # Learning rate para bias durante o warmup | Para redes profundas, datasets desequilibrados, ou quando o foco é estabilidade inicial: (0.001–0.005) | Para redes médias ou bem inicializadas:  (0.01–0.1)
+  warmup_bias_lr: 0.002  # Learning rate para bias durante o warmup | Para redes profundas, datasets desequilibrados, ou quando o foco é estabilidade inicial: (0.001–0.005) | Para redes médias ou bem inicializadas:  (0.01–0.1)
 
 # Exemplo: Se lr0 = 0.01, um lrf típico seria entre 0.001 e 0.1.
 # Impacto de uma lrf maior: Convergência mais lenta: O learning rate final não será muito menor que o inicial. Pode ser útil para problemas menores ou simples onde o modelo já está próximo do ótimo durante o treinamento.
 # Impacto de uma lrf menor: Convergência mais precisa: O learning rate final será significativamente menor. É mais adequado para problemas complexos ou ruidosos, permitindo ajustes mais finos no final.
   
-  epochs: 50
+  weight_decay: 0.001 # penalizar pesos, quanto maior, melhor generalização para coisas que o modelo n viu, mas menor o apredizado por época || 0.1 é alto, 0.0005 é baixo
+  epochs: 100
   momentum: 0.9 ### controla a taxa de atualização dos pesos do modelo, ou seja, muito alto os pesos são atualizados mais vezes durante o treinamento, quanto maior, mais atualiza os pesos, 0.95 é alto, (0.8 - 0.9) médio
   lr0: 0.05  # Learning rate inicial
   lrf: 0.005  # Learning rate final | Datasets complexos ou com grande variabilidade: (lrf=0.001 ou lrf=0.005) | Datasets pequenos ou com baixo ruído: (lrf=0.05 a 0.1)
-  
+  optimizer: "AdamW"
+
   augmentation:
     hsv_h: 0.015             # Alteração de tonalidade
     hsv_s: 0.7               # Alteração de saturação

@@ -6,13 +6,13 @@ import os
 função para augmentar imagens usando albumentations
 """
 
-def aug_dataset(task, dataset_path):
+def aug_dataset(task, dataset_path, n_aug, odd):
         
         if task == 'detect':
-            model_detect(dataset_path)
+            model_detect(dataset_path, n_aug, odd)
 
         if task == 'classify':
-            model_classify(dataset_path)
+            model_classify(dataset_path, n_aug, odd)
 
 def read_yolo_annotations(txt_path):
     bboxes = []
@@ -41,15 +41,15 @@ def save_yolo_annotations(txt_path, bboxes, class_labels):
             # Salvando no formato YOLO
             f.write(f"{int(class_id)} {x_center} {y_center} {width} {height}\n")
 
-def model_detect(dataset_path):
+def model_detect(dataset_path, n_aug, odd):
 
-    os.makedirs(dataset_path, exist_ok=True)
-    images = f"{dataset_path}/images"
+    os.makedirs(f"datasets/{dataset_path}", exist_ok=True)
+    images = f"datasets/{dataset_path}/images"
 
     for folder in os.listdir(images):
         if folder != None:
-            pasta_imagens = f"{dataset_path}/images/{folder}"
-            pasta_labels = f"{dataset_path}/labels/{folder}"
+            pasta_imagens = f"datasets/{dataset_path}/images/{folder}"
+            pasta_labels = f"datasets/{dataset_path}/labels/{folder}"
 
             for file in os.listdir(pasta_imagens):
 
@@ -70,27 +70,27 @@ def model_detect(dataset_path):
                 transform = A.Compose([
                     
                     # Transformações no nível de pixel
-                    A.GaussianBlur(blur_limit=(3, 5), p=0.2),
-                    A.MotionBlur(blur_limit=5, p=0.2),
-                    A.RandomBrightnessContrast(brightness_limit=0.15, contrast_limit=0.15, p=0.2),
-                    A.ISONoise(color_shift=(0.01, 0.03), intensity=(0.1, 0.3), p=0.2),
-                    A.SaltAndPepper(p=0.2),
-                    A.RandomFog(fog_coef_lower=0.05, fog_coef_upper=0.2, alpha_coef=0.05, p=0.2),
-                    A.RandomSnow(snow_point_lower=0.05, snow_point_upper=0.2, brightness_coeff=1.5, p=0.2),
-                    A.RandomRain(slant_lower=-5, slant_upper=5, drop_length=8, drop_width=1, blur_value=3, p=0.2),
-                    A.RandomSunFlare(flare_roi=(0.5, 0.5, 1.0, 1.0), angle_lower=0.0, src_radius=100, p=0.2),
+                    A.GaussianBlur(blur_limit=(1, 3), p=odd),
+                    A.MotionBlur(blur_limit=3, p=odd),
+                    A.RandomBrightnessContrast(brightness_limit=0.05, contrast_limit=0.05, p=odd),
+                    A.ISONoise(color_shift=(0.005, 0.02), intensity=(0.05, 0.1), p=odd),
+                    A.SaltAndPepper(p=odd),
+                    A.RandomFog(fog_coef_lower=0.02, fog_coef_upper=0.2, alpha_coef=0.02, p=odd),
+                    A.RandomSnow(snow_point_lower=0.02, snow_point_upper=0.2, brightness_coeff=1.2, p=odd),
+                    A.RandomRain(slant_lower=-2, slant_upper=2, drop_length=5, drop_width=1, blur_value=2, p=odd),
+                    A.RandomSunFlare(flare_roi=(0.5, 0.5, 1.0, 1.0), angle_lower=0.0, src_radius=100, p=odd),
                     
                     # Transformações no nível espacial
-                    A.BBoxSafeRandomCrop(erosion_rate=0.15, p=0.2),
-                    A.SmallestMaxSize(max_size=img_width*0.75, p=0.2),
-                    A.VerticalFlip(p=0.2),
-                    A.SafeRotate(limit=10, border_mode=0, p=0.2),
-                    A.GridDropout(ratio=0.3, unit_size_min=15, unit_size_max=40, holes_number_x=2, holes_number_y=2, p=0.2),
-                    A.HorizontalFlip(p=0.2),
+                    A.BBoxSafeRandomCrop(erosion_rate=0.1, p=odd),
+                    A.SmallestMaxSize(max_size=int(img_width*0.75), p=odd),
+                    A.VerticalFlip(p=odd),
+                    A.SafeRotate(limit=10, border_mode=0, p=odd),
+                    A.GridDropout(ratio=0.1, unit_size_min=30, unit_size_max=60, holes_number_x=1, holes_number_y=1, p=odd),
+                    A.HorizontalFlip(p=odd),
 
                     ], bbox_params=A.BboxParams(format='yolo', label_fields=['class_labels'], min_visibility=0.4))
 
-                for i in range(2):
+                for i in range(int(n_aug)):
                   
                     # Aplicar as transformações
                     augmented = transform(image=image, bboxes=bboxes, class_labels=class_labels)
@@ -113,13 +113,13 @@ def model_detect(dataset_path):
                     new_txt_path = '/'.join([pasta_labels, f"{filename}_{i}.txt"])
                     save_yolo_annotations(new_txt_path, transformed_bboxes, transformed_class_labels)
         
-def model_classify(dataset_path):
+def model_classify(dataset_path, n_aug, odd):
 
-    os.makedirs(dataset_path, exist_ok=True)
+    os.makedirs(f"datasets/{dataset_path}", exist_ok=True)
 
-    for caminho in os.listdir(dataset_path):
+    for caminho in os.listdir(f"datasets/{dataset_path}"):
         if caminho != None:
-            caminho_pasta = '/'.join([dataset_path, caminho])
+            caminho_pasta = '/'.join([f"datasets/{dataset_path}", caminho])
             
             if os.path.isdir(caminho_pasta):
                 for folder in os.listdir(caminho_pasta):
@@ -140,26 +140,26 @@ def model_classify(dataset_path):
                             transform = A.Compose([
                                 
                                 # Transformações no nível de pixel
-                                A.GaussianBlur(blur_limit=(3, 5), p=0.2),
-                                A.MotionBlur(blur_limit=5, p=0.2),
-                                A.RandomBrightnessContrast(brightness_limit=0.15, contrast_limit=0.15, p=0.2),
-                                A.ISONoise(color_shift=(0.01, 0.03), intensity=(0.1, 0.3), p=0.2),
-                                A.SaltAndPepper(p=0.2),
-                                A.RandomFog(fog_coef_lower=0.05, fog_coef_upper=0.2, alpha_coef=0.05, p=0.2),
-                                A.RandomSnow(snow_point_lower=0.05, snow_point_upper=0.2, brightness_coeff=1.5, p=0.2),
-                                A.RandomRain(slant_lower=-5, slant_upper=5, drop_length=8, drop_width=1, blur_value=3, p=0.2),
-                                A.RandomSunFlare(flare_roi=(0.5, 0.5, 1, 1), angle_lower=0.0, src_radius=100, p=0.2),
+                                A.GaussianBlur(blur_limit=(1, 3), p=odd),
+                                A.MotionBlur(blur_limit=3, p=odd),
+                                A.RandomBrightnessContrast(brightness_limit=0.05, contrast_limit=0.05, p=odd),
+                                A.ISONoise(color_shift=(0.005, 0.02), intensity=(0.05, 0.1), p=odd),
+                                A.SaltAndPepper(p=odd),
+                                A.RandomFog(fog_coef_lower=0.02, fog_coef_upper=0.2, alpha_coef=0.02, p=odd),
+                                A.RandomSnow(snow_point_lower=0.02, snow_point_upper=0.2, brightness_coeff=1.2, p=odd),
+                                A.RandomRain(slant_lower=-2, slant_upper=2, drop_length=5, drop_width=1, blur_value=2, p=odd),
+                                A.RandomSunFlare(flare_roi=(0.5, 0.5, 1.0, 1.0), angle_lower=0.0, src_radius=100, p=odd),
                                 
                                 # Transformações no nível espacial
-                                A.RandomGridShuffle(grid=(2, 2), p=0.2),
-                                A.SmallestMaxSize(max_size=img_width*0.75, p=0.2),
-                                A.VerticalFlip(p=0.2),
-                                A.SafeRotate(limit=10, border_mode=0, p=0.2),
-                                A.GridDropout(ratio=0.3, unit_size_min=15, unit_size_max=40, holes_number_x=2, holes_number_y=2, p=0.2),
-                                A.HorizontalFlip(p=0.2),
+                                A.RandomGridShuffle(grid=(2, 2), p=odd),
+                                A.SmallestMaxSize(max_size=int(img_width*0.75), p=odd),
+                                A.VerticalFlip(p=odd),
+                                A.SafeRotate(limit=10, border_mode=0, p=odd),
+                                A.GridDropout(ratio=0.1, unit_size_min=30, unit_size_max=60, holes_number_x=1, holes_number_y=1, p=odd),
+                                A.HorizontalFlip(p=odd),
                             ])
                             
-                            for i in range(2):
+                            for i in range(int(n_aug)):
 
                                 # Aplicar as transformações
                                 augmented = transform(image=image)
