@@ -12,3 +12,5 @@ fake*
 *.avi
 __pycache__
 *venv*
+*.json
+*.yaml

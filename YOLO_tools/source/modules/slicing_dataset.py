@@ -20,8 +20,8 @@ def slicing_dataset_for_traning(task, imageFolder, annotationsFolder, yoloClasse
         if task == 'COCO':
             detect_COCO_dataset(imageFolder, annotationsFolder, yoloClasses, TestPercentualDivisor, dataset_path)
 
-        # if aug:
-        #     aug_dataset(task, dataset_path, n_aug, odd)
+        if aug:
+            aug_dataset(task, dataset_path, n_aug, odd)
 
 def detect_COCO_dataset(imageFolder, coco_annotation_path, yoloClasses, test_size, output_dir, random_state=42):
 
@@ -39,7 +39,7 @@ def detect_COCO_dataset(imageFolder, coco_annotation_path, yoloClasses, test_siz
     ann_path, ann_name = (coco_annotation_path, 'annotations')
     
     # Carregar o arquivo de anotações COCO
-    with open(ann_path, 'r') as f:
+    with open(f"{ann_path}/instances_default.json", 'r') as f:
         coco_data = json.load(f)
 
     # Extrair as imagens e anotações
@@ -76,10 +76,9 @@ def detect_COCO_dataset(imageFolder, coco_annotation_path, yoloClasses, test_siz
     }
 
     # Salvar os arquivos separados
-    os.makedirs(output_dir, exist_ok=True)
-    
-    train_path = os.path.join(output_dir, 'train.json')
-    val_path = os.path.join(output_dir, 'val.json')
+    os.makedirs(f"datasets/{output_dir}/{ann_name}", exist_ok=True)
+    train_path = os.path.join(f"datasets/{output_dir}/{ann_name}", 'train.json')
+    val_path = os.path.join(f"datasets/{output_dir}/{ann_name}", 'val.json')
     
     with open(train_path, 'w') as f:
         json.dump(train_data, f, indent=4)
