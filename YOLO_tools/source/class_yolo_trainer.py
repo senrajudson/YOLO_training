@@ -8,7 +8,7 @@ class YOLOTrainer:
         self.image_folder = None
         self.annotations_folder = None
         self.yolo_Classes = None
-        self.test_percentual_divisor = None
+        self.test_percentual_divisor = 1
         self.dataset_path = None
         self.task = None
         self.aug = False
@@ -32,7 +32,7 @@ class YOLOTrainer:
     
     @annotations_folder.setter
     def annotations_folder(self, path):
-        self._annotations_folder = (path, "labels")
+        self._annotations_folder = path
 
     @property
     def yolo_Classes(self):
@@ -48,7 +48,7 @@ class YOLOTrainer:
     
     @test_percentual_divisor.setter
     def test_percentual_divisor(self, value):
-        self._test_percentual_divisor = value
+        self._test_percentual_divisor = value/100
 
     @property
     def dataset_path(self):

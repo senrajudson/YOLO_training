@@ -1,8 +1,0 @@
-
-    path: emissoes_YOLO
-    train: images/train
-    val: images/val
-    nc: 1
-    names:
-      0: 'emissao'
-    
