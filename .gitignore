@@ -10,3 +10,5 @@ fake*
 *.jpg
 *.mp4
 *.avi
+__pycache__
+*venv*
