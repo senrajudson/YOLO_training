@@ -36,14 +36,14 @@ class YOLO_Dataset(Dataset):
 
         return image, boxes
 
-# Utilizando o novo Dataset no lugar do ImageFolder:
-transform = transforms.Compose([
-    transforms.Resize((640, 640)),
-    transforms.ToTensor()
-])
+# # Utilizando o novo Dataset no lugar do ImageFolder:
+# transform = transforms.Compose([
+#     transforms.Resize((640, 640)),
+#     transforms.ToTensor()
+# ])
 
-train_dataset = YOLO_Dataset(train_dir, 'path/to/train/labels', transform=transform)
-val_dataset = YOLO_Dataset(val_dir, 'path/to/val/labels', transform=transform)
+# train_dataset = YOLO_Dataset(train_dir, 'path/to/train/labels', transform=transform)
+# val_dataset = YOLO_Dataset(val_dir, 'path/to/val/labels', transform=transform)
 
-train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-val_loader = DataLoader(val_dataset, batch_size=batch_size)
+# train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+# val_loader = DataLoader(val_dataset, batch_size=batch_size)
