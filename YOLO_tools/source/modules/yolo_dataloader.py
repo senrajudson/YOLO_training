@@ -1,15 +1,15 @@
-import os
-import torch
 from torch.utils.data import Dataset
-from torchvision import transforms
 from PIL import Image
+import torch
+import os
+
 
 class YOLO_Dataset(Dataset):
     def __init__(self, images_dir, labels_dir, transform=None):
         self.images_dir = images_dir
         self.labels_dir = labels_dir
         self.transform = transform
-        self.image_files = [f for f in os.listdir(images_dir) if f.endswith('.jpg')]  # Ajuste para o formato das suas imagens
+        self.image_files = [f for f in os.listdir(images_dir) if f.endswith('.png')]  # Ajuste para o formato das suas imagens
 
     def __len__(self):
         return len(self.image_files)
@@ -19,7 +19,7 @@ class YOLO_Dataset(Dataset):
         img_path = os.path.join(self.images_dir, img_name)
         image = Image.open(img_path).convert('RGB')
         
-        label_name = img_name.replace('.jpg', '.txt')
+        label_name = img_name.replace('.png', '.txt')
         label_path = os.path.join(self.labels_dir, label_name)
         
         # Carregar as anotações (caixas delimitadoras)

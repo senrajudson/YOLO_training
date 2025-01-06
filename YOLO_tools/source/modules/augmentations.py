@@ -58,34 +58,28 @@ def aug_COCO_detect(dataset_path, n_aug, odd):
                 bboxes.append(coco_bbox)
                 class_labels.append(ann['category_id'])
 
-            transform = A.Compose([
+                transform = A.Compose([
 
-                    A.GaussianBlur(blur_limit=(1, 3), p=odd),                    # Transformações no nível de pixel
-                    A.MotionBlur(blur_limit=3, p=odd),
+                    A.GaussianBlur(blur_limit=(1, 2), p=odd),
                     A.RandomBrightnessContrast(brightness_limit=0.05, contrast_limit=0.05, p=odd),
                     A.ISONoise(color_shift=(0.005, 0.02), intensity=(0.05, 0.1), p=odd),
                     A.SaltAndPepper(p=odd),
-                    A.RandomFog(fog_coef_lower=0.02, fog_coef_upper=0.2, alpha_coef=0.02, p=odd),
-                    A.RandomSnow(snow_point_lower=0.02, snow_point_upper=0.2, brightness_coeff=1.2, p=odd),
-                    A.RandomRain(slant_lower=-2, slant_upper=2, drop_length=5, drop_width=1, blur_value=2, p=odd),
-                    A.RandomSunFlare(flare_roi=(0.5, 0.5, 1.0, 1.0), angle_lower=0.0, src_radius=100, p=odd),
                     
-                    A.BBoxSafeRandomCrop(erosion_rate=0.1, p=odd),                    # Transformações no nível espacial
+                    A.BBoxSafeRandomCrop(erosion_rate=0.05, p=odd),
                     A.SmallestMaxSize(max_size=int(img_width*0.75), p=odd),
                     A.VerticalFlip(p=odd),
                     A.SafeRotate(limit=10, border_mode=0, p=odd),
-                    # A.GridDropout(ratio=0.1, unit_size_min=30, unit_size_max=60, holes_number_x=1, holes_number_y=1, p=odd),
                     A.HorizontalFlip(p=odd),
 
-            ], bbox_params=A.BboxParams(format='coco', label_fields=['class_labels'], min_visibility=0.4))
+                ], bbox_params=A.BboxParams(format='coco', label_fields=['class_labels'], min_visibility=0.4))
 
             def validate_bbox(bbox):
                 x_min, y_min, x_max, y_max = bbox
-                if not (0.0 <= x_min <= 1.0 and 0.0 <= y_min <= 1.0 and 0.0 <= x_max <= 1.0 and 0.0 <= y_max <= 1.0):
+                if (0.0 <= x_min <= 1.0 and 0.0 <= y_min <= 1.0 and 0.0 <= x_max <= 1.0 and 0.0 <= y_max <= 1.0):
                     return False
                 if x_min >= x_max or y_min >= y_max:
-                    return False
-                return True
+                    return True
+                return False
 
             for i in range(int(n_aug)):
                 augmented = transform(image=image, bboxes=bboxes, class_labels=class_labels)

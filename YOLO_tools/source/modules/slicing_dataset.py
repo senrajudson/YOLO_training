@@ -96,9 +96,8 @@ def detect_COCO_dataset(imageFolder, coco_annotation_path, yoloClasses, test_siz
 
         file.write(
     f"""
-    path: {output_dir}
-    train: annotations/train.json
-    val: annotations/val.json
+    train: annotations\\train.json
+    val: annotations\\val.json
     nc: {nc}
     names: {names}
     """
@@ -141,10 +140,9 @@ def detect_YOLO_dataset(imageFolder, annotationsFolder, yoloClasses, TestPercent
             names = f"  0: '{yoloClasses}'"
 
         file.write(
-    f"""
-    path: {dataset_path}
-    train: images/train
-    val: images/val
+    f""" 
+    train: images\\train
+    val: images\\val
     nc: {nc}
     names:
     {names}
@@ -236,7 +234,6 @@ f"""{data}
 
         file.write(
     f"""
-    path: {dataset_path}
     train: train
     val: val
     nc: {nc}
