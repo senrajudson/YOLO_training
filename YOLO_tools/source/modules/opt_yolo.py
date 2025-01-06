@@ -42,14 +42,19 @@ def objective(trial: int, images: str, labels: str, model: YOLO, data_yaml: str)
     # model = YOLO(model)   # Criar modelo YOLO
 
     # batch_size = trial.suggest_categorical("batch_size", [16, 32, 64])
-    c_opts = trial.suggest_int("epochs", 5, 30)
-    c_epochs = trial.suggest_int("epochs", 15, 150)
-    c_learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-2)
-    c_batch_size = trial.suggest_int("batch_size", 8, 128)
+    c_learning_ratef = trial.suggest_float("lrf", 1e-5, 1e-2)
+    c_learning_rate0 = trial.suggest_float("lr0", 1e-5, 1e-1)
     c_weight_decay = trial.suggest_float("weight_decay", 1e-3, 1e-2)
-    c_step_size = trial.suggest_int("step_size", 1, 1000)
-    c_gamma = trial.suggest_float("c_gamma", 1e-3, 1e-1)
+    c_momentum = trial.suggest_float("momentum", 0.8, 0.95)
+
     c_resize = trial.suggest_categorical("size", [360, 480, 640, 1024])
+    c_batch_size = trial.suggest_int("batch", 8, 48)
+    c_epochs = trial.suggest_int("epochs", 15, 150)
+
+    c_warmup_epochs = trial.suggest_int("warmup_epochs", 1, 5)
+    c_warmup_momentum = trial.suggest_float("warmup_momentum", 0.2, 0.9)
+    c_warmup_bias_lr = trial.suggest_float("warmup_bias_lr", 1e-4, 1e-2)
+
 
     # transform = Compose([Resize((c_resize, c_resize)), ToTensor()])       # Preparação dos dados
     # train_dataset = ImageFolder(root=train, transform=transform)
@@ -57,51 +62,38 @@ def objective(trial: int, images: str, labels: str, model: YOLO, data_yaml: str)
     # train_loader = DataLoader(train_dataset, batch_size=c_batch_size, shuffle=True)
     # val_loader = DataLoader(val_dataset, batch_size=c_batch_size)
 
-    transform = transforms.Compose([    # Utilizando o novo Dataset no lugar do ImageFolder:
-        transforms.Resize((c_resize, c_resize)),
-        transforms.ToTensor()
-    ])
+    # transform = transforms.Compose([    # Utilizando o novo Dataset no lugar do ImageFolder:
+    #     transforms.Resize((c_resize, c_resize)),
+    #     transforms.ToTensor()
+    # ])
 
-    train_dataset = YOLO_Dataset(f"{images}\\train", f"{labels}\\train", transform=transform)
-    val_dataset = YOLO_Dataset(f"{images}\\val", f"{labels}\\val", transform=transform)
-    train_loader = DataLoader(train_dataset, batch_size=c_batch_size, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=c_batch_size)
+    # train_dataset = YOLO_Dataset(f"{images}\\train", f"{labels}\\train", transform=transform)
+    # val_dataset = YOLO_Dataset(f"{images}\\val", f"{labels}\\val", transform=transform)
+    # train_loader = DataLoader(train_dataset, batch_size=c_batch_size, shuffle=True)
+    # val_loader = DataLoader(val_dataset, batch_size=c_batch_size)
 
-    optimizer = torch.optim.Adam(model.model.parameters(), lr=c_learning_rate, weight_decay=c_weight_decay)
+    results = model.train(
+        data=data_yaml, 
+        imgsz=c_resize, 
+        epochs=c_epochs, 
+        batch=c_batch_size,
 
-    # model.train(data=data_yaml, epochs=c_epochs)  # Modo de treinamento
-    with torch.cuda.amp.autocast('cuda'):  # Ativa o modo de precisão mista
-        results = model.train()
+        weight_decay=c_weight_decay, 
+        lrf=c_learning_ratef, 
+        lr0=c_learning_rate0,
 
-        # loss = results.loss   # para pegar a métrica loss
-        f1_score = results.metrics.get('F1', None)    # para pegar a métrica f1
-        # mAP_50_95 = results.metrics.get('mAP_50_95', None)    # para pegar a métrica mAP
+        warmup_epochs=c_warmup_epochs,
+        warmup_momentum=c_warmup_momentum,
+        warmup_bias_lr=c_warmup_bias_lr,
+        momentum=c_momentum,
+        
+        ),
+    
+    cls_loss = results.metrics.get('cls_loss', None)   
+    box_loss = results.metrics.get('box_loss', None)          # A perda (loss) ainda está disponível
+    mAP_50_95 = results.metrics.get('mAP_50_95', None)  # Usando .get() para evitar erro caso a métrica não exista        # Para acessar o mAP, você pode acessar 'metrics' no resultado
+    f1_score = results.metrics.get('F1', None)        # Para acessar o F1-Score
 
-    best_metric = None
-    patience = 5  # Número máximo de épocas sem melhoria
-    patience_counter = 0
 
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=c_step_size, gamma=c_gamma)   # configurar um trial para isso aqui
-    for epoch in range(c_epochs):
-        train_epoch(model, train_loader, c_learning_rate, epoch, optimizer=optimizer)
-        scheduler.step()  # Ajuste a taxa de aprendizado
-
-        metric = evaluate_model_f1(model, val_loader)
-        if metric > best_metric:
-            best_metric = metric
-            patience_counter = 0
-        else:
-            patience_counter += 1
-            if patience_counter >= patience:
-                print("Early stopping...")
-                break
-
-        trial.report(metric, step=epoch)
-
-        if trial.should_prune():
-            raise optuna.TrialPruned()
-
-        if best_metric is None or metric > best_metric:
-            best_metric = metric
-
+    print(f"Stats : \n\n {cls_loss} \n\n {box_loss} \n\n {mAP_50_95} \n\n {f1_score} \n\n")
     return f1_score
