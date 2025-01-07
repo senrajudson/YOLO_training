@@ -75,7 +75,7 @@ def objective(trial: int, images: str, labels: str, model: YOLO, data_yaml: str)
     results = model.train(
         data=data_yaml, 
         imgsz=c_resize, 
-        epochs=50, 
+        epochs=30, 
         batch=c_batch_size,
 
         weight_decay=c_weight_decay, 
@@ -89,7 +89,7 @@ def objective(trial: int, images: str, labels: str, model: YOLO, data_yaml: str)
         
         ),
     
-    cls_loss = results.metrics.get('cls_loss', None)   
+    cls_loss = results.get('cls_loss', None)   
     box_loss = results.metrics.get('box_loss', None)          # A perda (loss) ainda está disponível
     mAP_50_95 = results.metrics.get('mAP_50_95', None)  # Usando .get() para evitar erro caso a métrica não exista        # Para acessar o mAP, você pode acessar 'metrics' no resultado
     f1_score = results.metrics.get('F1', None)        # Para acessar o F1-Score

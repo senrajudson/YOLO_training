@@ -15,3 +15,4 @@ __pycache__
 *.json
 *.yaml
 ray_sessions
+wandb
