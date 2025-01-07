@@ -48,8 +48,8 @@ def objective(trial: int, images: str, labels: str, model: YOLO, data_yaml: str)
     c_momentum = trial.suggest_float("momentum", 0.8, 0.95)
 
     c_resize = trial.suggest_categorical("size", [360, 480, 640, 1024])
-    c_batch_size = trial.suggest_int("batch", 8, 48)
-    c_epochs = trial.suggest_int("epochs", 15, 150)
+    c_batch_size = trial.suggest_int("batch", 8, 32)
+    # c_epochs = trial.suggest_int("epochs", 15, 150)
 
     c_warmup_epochs = trial.suggest_int("warmup_epochs", 1, 5)
     c_warmup_momentum = trial.suggest_float("warmup_momentum", 0.2, 0.9)
@@ -75,7 +75,7 @@ def objective(trial: int, images: str, labels: str, model: YOLO, data_yaml: str)
     results = model.train(
         data=data_yaml, 
         imgsz=c_resize, 
-        epochs=c_epochs, 
+        epochs=50, 
         batch=c_batch_size,
 
         weight_decay=c_weight_decay, 
@@ -93,7 +93,6 @@ def objective(trial: int, images: str, labels: str, model: YOLO, data_yaml: str)
     box_loss = results.metrics.get('box_loss', None)          # A perda (loss) ainda está disponível
     mAP_50_95 = results.metrics.get('mAP_50_95', None)  # Usando .get() para evitar erro caso a métrica não exista        # Para acessar o mAP, você pode acessar 'metrics' no resultado
     f1_score = results.metrics.get('F1', None)        # Para acessar o F1-Score
-
 
     print(f"Stats : \n\n {cls_loss} \n\n {box_loss} \n\n {mAP_50_95} \n\n {f1_score} \n\n")
     return f1_score
