@@ -23,7 +23,7 @@ from source.modules.opt_yolo import objective
 from ultralytics import YOLO
 import optuna
 
-model = YOLO(r"yolo11m.pt")
+model = YOLO(r"yolo11n.pt")
 
 images_dir = r'D:\Judson_projetos\Yolo_trainer\YOLO_tools\datasets\emissoes_YOLO\images'
 labels_dir = r'D:\Judson_projetos\Yolo_trainer\YOLO_tools\datasets\emissoes_YOLO\labels'
