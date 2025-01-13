@@ -8,7 +8,9 @@ import ray
 from ultralytics.data.augment import Albumentations, CenterCrop, RandomFlip, RandomHSV, RandomPerspective
 
 """
-eu modifiquei as transformações dentro da classe 'Albumentations' no '.../ultralytics/data/augment, foi necessário zerar a probabilidade usando 'self.p'
+eu modifiquei as transformações dentro da classe 'Albumentations' no '.../ultralytics/data/augment, 
+foi necessário zerar a probabilidade usando um float 0.0 no transform 'T' e
+mudando o valor de 'p' em __init__ para 'p=0' 
 """
 albumentations_yolo = Albumentations(p=0.0)
 centercrop_yolo = CenterCrop(0)
@@ -24,7 +26,8 @@ space={     # Configurar o espaço de busca
     "warmup_epochs": tune.randint(1, 5),
     "warmup_momentum": tune.uniform(0.4, 0.8),
     "warmup_bias_lr": tune.uniform(1e-5, 1e-1),
-    "epochs": tune.randint(50, 200),
+    # "epochs": tune.randint(50, 200),
+    "epochs": 70,
     "optimizer": tune.choice(['SGD', "AdamW"]),
     "imgsz": tune.choice([360, 480, 640]),
     "batch": tune.randint(8, 48),
