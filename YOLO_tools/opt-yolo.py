@@ -7,6 +7,9 @@ import ray
 ### this are a mix of all YOLO built-in augments, if ur implementing manual augments, it's ideal to disable YOLO augments to avoid overlay
 from ultralytics.data.augment import Albumentations, CenterCrop, RandomFlip, RandomHSV, RandomPerspective
 
+"""
+eu modifiquei as transformações dentro da classe 'Albumentations' no '.../ultralytics/data/augment, foi necessário zerar a probabilidade usando 'self.p'
+"""
 albumentations_yolo = Albumentations(p=0.0)
 centercrop_yolo = CenterCrop(0)
 randomflip_yolo = RandomFlip(p=0.0)
@@ -34,10 +37,10 @@ data_yaml = r'D:\Judson_projetos\Yolo_trainer\YOLO_tools\datasets\emissoes_YOLO\
 results = model.tune(
                         data=data_yaml,
                         use_ray=True, 
-                        iterations=30,
+                        iterations=100,
                         space=space,
                         gpu_per_trial=1,
-                        project_name="YOLO11n-emissoes_noaug",
+                        project_name="YOLO11n-emissoes-no-yolo-aug",
 
                         )
 
