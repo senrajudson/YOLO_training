@@ -3,7 +3,7 @@ import logging
 import json
 import yaml
 
-#### YOLO é gambiarra e eu posso provar:
+### YOLO é gambiarra e eu posso provar:
 """ Para treinamentos de classificação com YOLO, você deve indicar o dir com o dataset
 que deve estar especificado dentro de uma pasta chamada 'datasets'. No entando, para detecção
 o YOLO é diferente. Você precisa indicar o caminho do arquivo 'dataset.yaml' para que ele 
@@ -19,8 +19,8 @@ diferentes a depender do treinamento que você vai fazer.
 # train_config = config['train']
 # aug_config = config['train']['augmentation']
 
-with open('params.json', 'r') as file:   # Carregar configurações de um arquivo
-    config = json.safe_load(file)
+with open(r'YOLO_tools\params.json', 'r') as file:   # Carregar configurações de um arquivo
+    config = json.load(file)
 
 model = YOLO(r"yolo11n.pt")
 
@@ -68,7 +68,7 @@ def on_train_epoch_end(trainer):
 model.add_callback('on_train_epoch_end', on_train_epoch_end)    # Adicione o callback personalizado ao modelo
 
 model.train(
-    data = "datasets/emissoes_YOLO/dataset.yaml",
+    data = r"D:\Judson_projetos\Yolo_trainer\YOLO_tools\datasets\emissoes_YOLO\dataset.yaml",
     device = "cuda",
 
     batch = config['batch'],    ### training configs
