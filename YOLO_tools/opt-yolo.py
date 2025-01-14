@@ -28,23 +28,41 @@ space={     # Configurar o espaço de busca
     "warmup_bias_lr": tune.uniform(1e-5, 1e-1),
     # "epochs": tune.randint(50, 200),
     "epochs": 70,
-    "optimizer": tune.choice(['SGD', "AdamW"]),
+    "optimizer": tune.choice(['AdamW', "SGD"]),
     "imgsz": tune.choice([360, 480, 640]),
     "batch": tune.randint(8, 48),
     }
 
-ray.init(_temp_dir=r"D:\Judson_projetos\Yolo_trainer\YOLO_tools\ray_sessions")
+import logging
 
-model = YOLO(r"yolo11n.pt")
-data_yaml = r'D:\Judson_projetos\Yolo_trainer\YOLO_tools\datasets\emissoes_YOLO\dataset.yaml'
-results = model.tune(
-                        data=data_yaml,
-                        use_ray=True, 
-                        iterations=100,
-                        space=space,
-                        gpu_per_trial=1,
-                        project_name="YOLO11n-emissoes-no-yolo-aug",
+logging.basicConfig(    # Configuração do log
+    filename="app_errors.log",  # Nome do arquivo de log
+    level=logging.ERROR,  # Nível de log configurado para capturar erros
+    format="%(asctime)s - %(levelname)s - %(message)s",  # Formato da mensagem de log
+)
 
-                        )
+while True:
+    
+    try:
+        ray.init(_temp_dir=r"D:\Judson_projetos\Yolo_trainer\YOLO_tools\ray_sessions")
 
-print(results)
+        model = YOLO(r"yolo11n.pt")
+        data_yaml = r'D:\Judson_projetos\Yolo_trainer\YOLO_tools\datasets\emissoes_YOLO\dataset.yaml'
+        results = model.tune(
+                                data=data_yaml,
+                                use_ray=True, 
+                                iterations=100,
+                                space=space,
+                                gpu_per_trial=1,
+                                project_name="YOLO11n-emissoes-no-yolo-aug",
+
+                                )
+
+        print(results)
+
+    except Exception as e:
+        
+        logging.error(f"Erro capturado: {e}")
+        
+        import time
+        time.sleep(5)
