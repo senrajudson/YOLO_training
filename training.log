@@ -1,0 +1,11 @@
+2025-01-16 13:15:35,490 - INFO - 
+Best actual metric : 0.3121 on epoch 1
+2025-01-16 13:18:46,833 - INFO - 
+Best actual metric : 0.3983 on epoch 8
+2025-01-16 13:19:14,886 - INFO - 
+Best actual metric : 0.3994 on epoch 9
+2025-01-16 13:26:09,430 - INFO - 
+Best actual metric : 0.451 on epoch 24
+2025-01-16 13:27:31,584 - INFO - 
+Best actual metric : 0.5166 on epoch 27
+2025-01-16 14:13:40,555 - WARNING - Patience has reached limit at epoch 126

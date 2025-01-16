@@ -16,3 +16,5 @@ __pycache__
 *.yaml
 ray_sessions
 wandb
+*.pt
+runs
